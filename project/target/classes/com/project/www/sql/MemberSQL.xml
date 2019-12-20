@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+         
+         
+         
+       <mapper namespace="mSQL">
+      
+      <insert id ="addgallery" parameterType="gVO">  <!-- 갤러리 사진 첨부 SQL -->
+   <selectKey keyProperty ="gmno" resultType="int" order ="BEFORE">
+   SELECT
+   		m_no	
+   	FROM
+   		member
+   	WHERE
+   		m_id = #{gid}
+   </selectKey>
+	INSERT INTO
+	gallery(gno, gmno, goriName, gsaveName, gtitle, gbody, glen, gdir)
+	
+	 VALUES
+	 ((SELECT NVL(MAX(gno) + 1, 1000001) FROM gallery ), #{gmno}, #{oriName}, #{saveName}, #{title}, #{body}, #{len}, #{dir}
+      )   
+   
+   
+     </insert>
+   
+   <insert id="likehate" parameterType="int">
+   
+   
+   
+   
+   
+   </insert>
+   
+   
+   
+   <select id="gallerylist" resultType="gVO"> <!-- 갤러리 리스트 SQL -->
+   
+ 
+   SELECT 
+   gno, gtitle title, gdir dir, goriname oriName, gsavename saveName,(SELECT m_id FROM member WHERE m_no = gmno ) id
+    
+   FROM
+   gallery
+   
+	ORDER BY gno desc
+
+   </select> 
+   
+        
+        
+     <update id="galleryconf" parameterType="gVO" > <!-- 갤러리 SQL 수정  -->
+   	UPDATE
+   		gallery
+   	<set>
+   	 	gtitle=#{title}, gbody=#{body}, gsaveName=#{saveName}, goriName=#{oriName}
+   	 WHERE
+   	 	gno = #{gno} 
+   	
+   	</set>
+   </update>
+   
+   	<select id="gallerycontent"	parameterType="gVO" resultType="gVO"> <!-- 갤러리 상세보기 SQL  -->
+   	SELECT 
+   		gno , gtitle title, gbody body, gdir dir, gsavename saveName
+   	
+   	FROM
+   	 gallery
+   	 
+   	 WHERE
+   	 	gno =#{gno}
+   	
+   	</select>
+   		
+	   <delete id="delete" parameterType="gvo">  <!-- 갤러리 삭제  sql -->
+	   DELETE 
+	   FROM
+	   gallery
+		WHERE
+		gno =#{gno}	   
+	   
+	   </delete>
+	   
+        
+        
+        
+        
+
+  </mapper>
+  
